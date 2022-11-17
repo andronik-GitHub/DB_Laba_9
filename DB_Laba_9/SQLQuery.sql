@@ -1,0 +1,89 @@
+/*
+CREATE DATABASE [Страхова компанія]
+GO
+
+USE [Страхова компанія]
+GO
+*/
+
+/* =============================================== */
+
+
+
+CREATE TABLE [Філії]
+(
+	[Код філії] DECIMAL(8, 0) NOT NULL,
+	[Найменування філії] NVARCHAR(100) NOT NULL,
+	[Адреса] NVARCHAR(100) NOT NULL,
+	[Телефон] NVARCHAR(20) NOT NULL,
+
+	PRIMARY KEY ([Код філії])
+);
+GO
+
+CREATE TABLE [Вид страхування]
+(
+	[Код виду страхування] DECIMAL(8, 0) NOT NULL,
+	[Найменування] NVARCHAR(100) NOT NULL,
+
+	PRIMARY KEY ([Код виду страхування])
+);
+GO
+
+CREATE TABLE [Страхові агенти]
+(
+	[Код агента] DECIMAL(8, 0) NOT NULL,
+	[Прізвище] NVARCHAR(30) NOT NULL,
+	[Ім'я] NVARCHAR(30) NOT NULL,
+	[По батькові] NVARCHAR(30) NOT NULL,
+	[Адреса] NVARCHAR(100) NOT NULL,
+	[Телефон] NVARCHAR(20) NOT NULL,
+	[Код філії] DECIMAL(8, 0) NOT NULL,
+	[Заробітня плата] MONEY NOT NULL,
+
+	PRIMARY KEY ([Код агента])
+);
+GO
+
+CREATE TABLE [Договори]
+(
+	[Номер договору] INT IDENTITY(0, 1) NOT NULL,
+	[Дата договору] DATETIME NOT NULL,
+	[Страхова сума] MONEY NOT NULL,
+	[Тарифна ставка] INT NOT NULL,
+	[Код філії] DECIMAL(8, 0) NOT NULL,
+	[Код виду страхування] DECIMAL(8, 0) NOT NULL,
+	[Код агента] DECIMAL(8, 0) NOT NULL,
+
+	PRIMARY KEY ([Номер договору])
+);
+GO
+/* =============================================== */
+
+
+ALTER TABLE [Договори]
+ADD CONSTRAINT FK_Філії_To_Договори FOREIGN KEY([Код філії]) REFERENCES [Філії] ([Код філії])
+GO
+
+ALTER TABLE [Договори]
+ADD CONSTRAINT FK_Страхування_To_Договори FOREIGN KEY([Код виду страхування]) REFERENCES [Вид страхування] ([Код виду страхування])
+GO
+
+ALTER TABLE [Договори]
+ADD CONSTRAINT FK_Агенти_To_Договори FOREIGN KEY([Код агента]) REFERENCES [Страхові агенти] ([Код агента])
+GO
+
+ALTER TABLE [Страхові агенти]
+ADD CONSTRAINT FK_Агенти_To_Філії FOREIGN KEY([Код філії]) REFERENCES [Філії] ([Код філії])
+GO
+
+/* =============================================== */
+
+/*
+
+DROP TABLE [Договори]
+DROP TABLE [Вид страхування]
+DROP TABLE [Страхові агенти]
+DROP TABLE [Філії]
+
+*/
